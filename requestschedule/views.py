@@ -1,18 +1,15 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from datetime import datetime
-from rest_framework import status
 from requestschedule.serializers import RequestscheduleSerializer
+from requestschedule.models import Userdetails, Requestschedule
 from helps.response.responsemessage import response as rspn
 from helps.common.generic import Generichelps as ghelp
-from requestschedule.models import Userdetails, Requestschedule
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from datetime import datetime
 
 @api_view(['POST'])
 def addrequestschedule(request):
     errors = []
-    # 2024-01-29
-    # 10:21:48
     service = request.data.get('service', '')
     date = request.data.get('date', datetime.today().strftime('%Y-%m-%d'))
     time = request.data.get('time', datetime.now().strftime('%H:%M:%S'))

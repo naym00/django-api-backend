@@ -1,5 +1,4 @@
 from datetime import datetime
-import re
 from django.core.mail import EmailMessage
 from email_validator import validate_email, EmailNotValidError
 
@@ -20,7 +19,6 @@ class Generichelps:
         if condition:
             try:
                 v = validate_email(email) 
-                # replace with normalized form
                 email = v["email"]  
                 flag = True
             except EmailNotValidError as e: pass
