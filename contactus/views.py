@@ -22,7 +22,7 @@ def addcontactus(request):
 
             subject = 'Mail From Api Solutions ltd.'
             message = f'companyName: {companyName}, name: {name}, corporateEmail: {corporateEmail}, phone: {phone}, comments: {comments}, protectDataByNDA: {protectDataByNDA}'
-            recipient_list = ['naymhsain00@gmail.com', 'nazmulhussain.api@gmail.com']
+            recipient_list = ['nazmulhussain.api@gmail.com']
             ghelp().send_mail_including_attatchment(subject, message, recipient_list)
 
 

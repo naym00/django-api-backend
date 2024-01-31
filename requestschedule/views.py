@@ -35,9 +35,8 @@ def addrequestschedule(request):
 
         subject = 'Mail From Api Solutions ltd.'
         message = f'service: {service}, date: {date}, time: {time}, budget: {budget}, description: {description}, name: {name}, phone: {phone}'
-        recipient_list = ['naymhsain00@gmail.com', 'nazmulhussain.api@gmail.com']
+        recipient_list = ['nazmulhussain.api@gmail.com']
         ghelp().send_mail_including_attatchment(subject, message, recipient_list)
 
         RequestscheduleSerializer(requestschedule, many=False)
         return Response({'status': rspn['success_status'], 'message': rspn['success_message']}, status=status.HTTP_201_CREATED)
-    

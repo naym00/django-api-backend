@@ -35,7 +35,7 @@ def addestimateproject(request):
 
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
     else: 
-        userdetails = Userdetails.objects.create(name=userDetails.get('name', ''), email=userDetails.get('email', ''), phone=userDetails.get('phone', ''))
+        userdetails = Userdetails.objects.create(name=name, email=email, phone=phone)
 
         estimateproject = Estimateproject.objects.create(
             projectType=projectType, 
@@ -60,7 +60,7 @@ def addestimateproject(request):
 
         subject = 'Mail From Api Solutions ltd.'
         message = f'challenges: {challenges}, alreadyHave: {alreadyHave}, timeframe: {timeframe}, projectType: {projectType}, yourRole: {yourRole}, servicesNeeded: {servicesNeeded}, preferredContactTime: {preferredContactTime}, projectDetails: {projectDetails}, userDetails: {userDetails}, newsletterSubscription: {newsletterSubscription}'
-        recipient_list = ['naymhsain00@gmail.com', 'nazmulhussain.api@gmail.com']
+        recipient_list = ['nazmulhussain.api@gmail.com']
         attachments = [f'media/{estimateproject.attachment}']
         ghelp().send_mail_including_attatchment(subject, message, recipient_list, attachments)
             
