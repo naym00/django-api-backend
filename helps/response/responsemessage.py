@@ -1,9 +1,10 @@
-
 response = {
     'success_status': 'success',
     'error_status': 'error',
+    'required_status': 'required',
     'success_message': 'Estimate project form submitted successfully.',
     'error_message': 'Invalid data. Please check the submitted form.',
+    'required_message': 'Empty field. Please check the submitted form.',
 
     'field_err_msg': {
         'date': 'Invalid Date!',
@@ -16,5 +17,12 @@ response = {
         'error_message': 'Coundn\'t send mail!',
         'email': 'Invalid Email!',
         'attatchment': 'Invalid attatchment path!',
+    },
+    'required': {
+        'attachment': 'attatchment is required!',
+        'projectType': 'projectType is required!',
+        'preferredContactTime': 'preferredContactTime is required!',
+        'yourRole': 'yourRole is required!',
+        'userDetails': 'userDetails is required!'
     }
 }

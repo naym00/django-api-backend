@@ -26,7 +26,7 @@ class Estimateproject(models.Model):
     newsletterSubscription = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'{self.projectType} - {self.yourRole}'
+        return f'{self.projectType} - {self.yourRole} - {self.attachmentname}'
     def save(self, *args, **kwargs):
         self.attachmentname = str(self.attachment)
         super().save(*args, **kwargs)

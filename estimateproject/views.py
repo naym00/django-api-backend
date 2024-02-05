@@ -10,6 +10,7 @@ import json
 @api_view(['POST'])
 def addestimateproject(request):
     errors = []
+    required = []
 
     challenges = json.loads(request.data.get('challenges', str({})).replace("'", "\""))
     alreadyHave = json.loads(request.data.get('alreadyHave', str({})).replace("'", "\""))
@@ -19,10 +20,16 @@ def addestimateproject(request):
     servicesNeeded = request.data.get('servicesNeeded', '')
     preferredContactTime = request.data.get('preferredContactTime', '')
     attachment = request.FILES.get('attachment')
-    attachmentname = str(attachment)
+    attachmentname = '' if attachment == None else str(attachment)
     projectDetails = request.data.get('projectDetails', '')
     userDetails = json.loads(request.data.get('userDetails', str({})).replace("'", "\""))
     newsletterSubscription = json.loads(request.data.get('newsletterSubscription', True))
+
+    if not projectType: required.append({'field': 'projectType','message': rspn['required']['projectType']})
+    if not preferredContactTime: required.append({'field': 'preferredContactTime','message': rspn['required']['preferredContactTime']})
+    if not yourRole: required.append({'field': 'yourRole','message': rspn['required']['yourRole']})
+    # if not userDetails: required.append({'field': 'userDetails','message': rspn['required']['userDetails']})
+
 
     name=userDetails.get('name', '')
     email=userDetails.get('email', '')
@@ -30,10 +37,14 @@ def addestimateproject(request):
 
     if not ghelp().emailvalidate(email): errors.append({'field': 'email','message': rspn['field_err_msg']['email']})
     if not ghelp().numbervalidate(phone): errors.append({'field': 'phone','message': rspn['field_err_msg']['phone']})
-    if not ghelp().attachmentvalidate(attachmentname): errors.append({'field': 'attachment','message': rspn['field_err_msg']['attachment']})
+    if attachmentname:
+        if not ghelp().attachmentvalidate(attachmentname): errors.append({'field': 'attachment','message': rspn['field_err_msg']['attachment']})
+
+    
     
 
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+    if required: return Response({'status': rspn['required_status'], 'message': rspn['required_message'], 'required': required}, status=status.HTTP_400_BAD_REQUEST)
     else: 
         userdetails = Userdetails.objects.create(name=name, email=email, phone=phone)
 
