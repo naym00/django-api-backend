@@ -68,7 +68,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://10.10.23.89:3000",
     "http://localhost:8080",
-    "http://127.0.0.1:8080"
+    "http://127.0.0.1:8080",
+
 ]
 
 ROOT_URLCONF = 'apisl.urls'

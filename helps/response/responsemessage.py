@@ -18,7 +18,7 @@ response = {
         'email': 'Invalid Email!',
         'attatchment': 'Invalid attatchment path!',
     },
-    'required': {
+    'required_error': {
         'attachment': 'attatchment is required!',
         'projectType': 'projectType is required!',
         'preferredContactTime': 'preferredContactTime is required!',

@@ -21,7 +21,7 @@ class Generichelps:
                 v = validate_email(email) 
                 email = v["email"]  
                 flag = True
-            except EmailNotValidError as e: pass
+            except EmailNotValidError as e: flag = False
         else: flag = True
         return flag
     

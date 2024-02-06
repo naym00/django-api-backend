@@ -10,7 +10,7 @@ import json
 @api_view(['POST'])
 def addestimateproject(request):
     errors = []
-    required = []
+
 
     challenges = json.loads(request.data.get('challenges', str({})).replace("'", "\""))
     alreadyHave = json.loads(request.data.get('alreadyHave', str({})).replace("'", "\""))
@@ -25,26 +25,27 @@ def addestimateproject(request):
     userDetails = json.loads(request.data.get('userDetails', str({})).replace("'", "\""))
     newsletterSubscription = json.loads(request.data.get('newsletterSubscription', True))
 
-    if not projectType: required.append({'field': 'projectType','message': rspn['required']['projectType']})
-    if not preferredContactTime: required.append({'field': 'preferredContactTime','message': rspn['required']['preferredContactTime']})
-    if not yourRole: required.append({'field': 'yourRole','message': rspn['required']['yourRole']})
-    # if not userDetails: required.append({'field': 'userDetails','message': rspn['required']['userDetails']})
+    if not projectType: errors.append({'field': 'projectType','message': rspn['required_error']['projectType']})
+    if not preferredContactTime: errors.append({'field': 'preferredContactTime','message': rspn['required_error']['preferredContactTime']})
+    if not yourRole: errors.append({'field': 'yourRole','message': rspn['required_error']['yourRole']})
+    if not userDetails: errors.append({'field': 'userDetails','message': rspn['required_error']['userDetails']})
+        
+        
 
+    if (userDetails =={})==False:
+        name=userDetails.get('name', '')
+        email=userDetails.get('email', '')
+        phone=userDetails.get('phone', '')
 
-    name=userDetails.get('name', '')
-    email=userDetails.get('email', '')
-    phone=userDetails.get('phone', '')
+        if not ghelp().emailvalidate(email): errors.append({'field': 'email','message': rspn['field_err_msg']['email']})
+        if not ghelp().numbervalidate(phone): errors.append({'field': 'phone','message': rspn['field_err_msg']['phone']})
+        if attachmentname:
+            if not ghelp().attachmentvalidate(attachmentname): errors.append({'field': 'attachment','message': rspn['field_err_msg']['attachment']})
 
-    if not ghelp().emailvalidate(email): errors.append({'field': 'email','message': rspn['field_err_msg']['email']})
-    if not ghelp().numbervalidate(phone): errors.append({'field': 'phone','message': rspn['field_err_msg']['phone']})
-    if attachmentname:
-        if not ghelp().attachmentvalidate(attachmentname): errors.append({'field': 'attachment','message': rspn['field_err_msg']['attachment']})
-
-    
+        
     
 
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
-    if required: return Response({'status': rspn['required_status'], 'message': rspn['required_message'], 'required': required}, status=status.HTTP_400_BAD_REQUEST)
     else: 
         userdetails = Userdetails.objects.create(name=name, email=email, phone=phone)
 
@@ -71,7 +72,7 @@ def addestimateproject(request):
 
         subject = 'Mail From Api Solutions ltd.'
         message = f'challenges: {challenges}, alreadyHave: {alreadyHave}, timeframe: {timeframe}, projectType: {projectType}, yourRole: {yourRole}, servicesNeeded: {servicesNeeded}, preferredContactTime: {preferredContactTime}, projectDetails: {projectDetails}, userDetails: {userDetails}, newsletterSubscription: {newsletterSubscription}'
-        recipient_list = ['nazmulhussain.api@gmail.com']
+        recipient_list = ['sathy754@gmail.com']
         attachments = [f'media/{estimateproject.attachment}']
         ghelp().send_mail_including_attatchment(subject, message, recipient_list, attachments)
             
