@@ -2,7 +2,9 @@ response = {
     'success_status': 'success',
     'error_status': 'error',
     'required_status': 'required',
-    'success_message': 'Estimate project form submitted successfully.',
+    'success_message_es': 'Estimate project form submitted successfully.',
+    'success_message_re': 'Request schedule form submitted successfully.',
+    'success_message_co': 'Form submitted successfully.',
     'error_message': 'Invalid data. Please check the submitted form.',
     'required_message': 'Empty field. Please check the submitted form.',
 

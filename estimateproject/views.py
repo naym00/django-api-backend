@@ -11,7 +11,6 @@ import json
 def addestimateproject(request):
     errors = []
 
-
     challenges = json.loads(request.data.get('challenges', str({})).replace("'", "\""))
     alreadyHave = json.loads(request.data.get('alreadyHave', str({})).replace("'", "\""))
     timeframe = json.loads(request.data.get('timeframe', str({})).replace("'", "\""))
@@ -72,8 +71,8 @@ def addestimateproject(request):
 
         subject = 'Mail From Api Solutions ltd.'
         message = f'challenges: {challenges}, alreadyHave: {alreadyHave}, timeframe: {timeframe}, projectType: {projectType}, yourRole: {yourRole}, servicesNeeded: {servicesNeeded}, preferredContactTime: {preferredContactTime}, projectDetails: {projectDetails}, userDetails: {userDetails}, newsletterSubscription: {newsletterSubscription}'
-        recipient_list = ['sathy754@gmail.com']
+        recipient_list = ['nazmulhussain.api@gmail.com']
         attachments = [f'media/{estimateproject.attachment}']
         ghelp().send_mail_including_attatchment(subject, message, recipient_list, attachments)
             
-        return Response({'status': rspn['success_status'], 'message': rspn['success_message']}, status=status.HTTP_201_CREATED)
+        return Response({'status': rspn['success_status'], 'message': rspn['success_message_es']}, status=status.HTTP_201_CREATED)
