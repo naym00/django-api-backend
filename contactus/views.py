@@ -24,7 +24,7 @@ def addcontactus(request):
 
         subject = 'Mail From Api Solutions ltd.'
         message = f'companyName: {companyName}, name: {name}, corporateEmail: {corporateEmail}, phone: {phone}, comments: {comments}, protectDataByNDA: {protectDataByNDA}'
-        recipient_list = ['nazmulhussain.api@gmail.com']
+        recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
         ghelp().send_mail_including_attatchment(subject, message, recipient_list)
 
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
