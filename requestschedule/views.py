@@ -22,7 +22,7 @@ def addrequestschedule(request):
         name = userDetails.get('name', '')
         phone = userDetails.get('phone', '')
 
-        if not ghelp().datevalidate(date):
+        if not ghelp().checkvaliddate(date):
             errors.append({'field': 'date','message': rspn['field_err_msg']['date']})
         if not ghelp().datevalitime(time, condition=False):
             errors.append({'field': 'time','message': rspn['field_err_msg']['time']})

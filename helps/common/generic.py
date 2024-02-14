@@ -43,12 +43,31 @@ class Generichelps:
         else: flag = True
         return flag
     
+    def checkvaliddate(self, date, condition=True):
+        flag = False
+        if condition:
+            if self.datevalidate(date):
+                if self.ispresentdate(date): flag = True
+        else: flag = True
+        return flag
+    
     def datevalidate(self, date, condition=True):
         flag = False
         if condition:
             try:
                 datetime.strptime(f'{date} 00:00:00', '%Y-%m-%d %H:%M:%S')
                 flag = True
+            except:
+                pass
+        else: flag = True
+        return flag
+    
+    def ispresentdate(self, date, condition=True):
+        flag = False
+        if condition:
+            try:
+                today = datetime.today().strftime('%Y-%m-%d')
+                if today<=date: flag = True
             except:
                 pass
         else: flag = True
