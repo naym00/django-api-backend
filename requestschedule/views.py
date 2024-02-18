@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
 
+from django.template.loader import render_to_string
+
 @api_view(['POST'])
 def addrequestschedule(request):
     errors = []
@@ -37,8 +39,23 @@ def addrequestschedule(request):
 
         subject = 'Mail From Api Solutions ltd.'
         message = f'service: {service}, date: {date}, time: {time}, budget: {budget}, description: {description}, name: {name}, phone: {phone}'
-        recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
-        ghelp().send_mail_including_attatchment(subject, message, recipient_list)
+        # recipient_list = ['naymhsain00@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        recipient_list = ['naymhsain00@gmail.com']
+
+        context = {
+                "service": service,
+                "date": date,
+                "time": time,
+                "budget": budget,
+                "description": description,
+                "userDetails": {
+                    "name": name,
+                    "phone": phone
+                }
+            }
+
+        html_message = render_to_string('EstimateProjectRequestDetails.html', context=context)
+        ghelp().send_mail_formatting(html_message, subject, message, recipient_list)
 
         RequestscheduleSerializer(requestschedule, many=False)
         return Response({'status': rspn['success_status'], 'message': rspn['success_message_re']}, status=status.HTTP_201_CREATED)

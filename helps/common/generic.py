@@ -1,5 +1,6 @@
 from datetime import datetime
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.utils.html import strip_tags
 from email_validator import validate_email, EmailNotValidError
 
 class Generichelps:
@@ -11,6 +12,23 @@ class Generichelps:
             for attachment in attachments:
                 email.attach_file(attachment)
             flag = bool(email.send())
+        except: flag = False
+        return flag
+
+
+    def send_mail_formatting(self, html_message, subject, message, recipient_list, attachments=[], email_from = None):
+        flag = False
+        try:
+            plain_message = strip_tags(html_message)
+            message = EmailMultiAlternatives(
+                subject=subject,
+                body=plain_message,
+                from_email=email_from,
+                to=recipient_list
+            )
+            message.attach_alternative(html_message, 'text/html')
+            flag = bool(message.send())
+
         except: flag = False
         return flag
     
