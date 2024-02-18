@@ -5,6 +5,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.template.loader import render_to_string
+
+
 @api_view(['POST'])
 def addcontactus(request):
     errors = []
@@ -13,7 +16,6 @@ def addcontactus(request):
     companyName = request.data.get('companyName', '')
     name = request.data.get('name', '')
     comments = request.data.get('comments', '')
-
     protectDataByNDA = request.data.get('protectDataByNDA', True)
     if not ghelp().numbervalidate(phone):errors.append({'field': 'phone','message': rspn['field_err_msg']['phone']})
     if not ghelp().emailvalidate(corporateEmail): errors.append({'field': 'email','message': rspn['field_err_msg']['email']})
@@ -23,9 +25,20 @@ def addcontactus(request):
         contactusserializer.save()
 
         subject = 'Mail From Api Solutions ltd.'
-        message = f'companyName: {companyName}, name: {name}, corporateEmail: {corporateEmail}, phone: {phone}, comments: {comments}, protectDataByNDA: {protectDataByNDA}'
+        # message = f'companyName: {companyName}, name: {name}, corporateEmail: {corporateEmail}, phone: {phone}, comments: {comments}, protectDataByNDA: {protectDataByNDA}'
+        # recipient_list = ['sathy754@gmail.com']
         recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
-        ghelp().send_mail_including_attatchment(subject, message, recipient_list)
+
+        context = {
+                "companyName": companyName,
+                "name": name,
+                "corporateEmail": corporateEmail,
+                "phone": phone,
+                "comments": comments,
+                "protectDataByNDA": protectDataByNDA,
+        }
+        html_message = render_to_string('ContactUs.html', context=context)
+        ghelp().send_mail_formatting(html_message, subject, recipient_list)
 
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
     else: return Response({'status': rspn['success_status'], 'message': rspn['success_message_co']}, status=status.HTTP_201_CREATED)

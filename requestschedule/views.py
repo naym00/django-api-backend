@@ -1,5 +1,5 @@
 from requestschedule.serializers import RequestscheduleSerializer
-from requestschedule.models import Userdetails, Requestschedule
+from requestschedule.models import *
 from helps.response.responsemessage import response as rspn
 from helps.common.generic import Generichelps as ghelp
 from rest_framework.decorators import api_view
@@ -15,7 +15,7 @@ def addrequestschedule(request):
     service = request.data.get('service', '')
     date = request.data.get('date', datetime.today().strftime('%Y-%m-%d'))
     time = request.data.get('time', datetime.now().strftime('%H:%M:%S'))
-    budget = request.data.get('budget', '')
+    budget = ghelp().getbudget(Budgetdetails, request.data.get('budget'))
     description = request.data.get('description', '')
     userDetails = request.data.get('userDetails', {})
 
@@ -38,9 +38,9 @@ def addrequestschedule(request):
         requestschedule = Requestschedule.objects.create(service=service, date=date, time=time, budget=budget, description=description, userDetails=userdetails)
 
         subject = 'Mail From Api Solutions ltd.'
-        message = f'service: {service}, date: {date}, time: {time}, budget: {budget}, description: {description}, name: {name}, phone: {phone}'
+        # message = f'service: {service}, date: {date}, time: {time}, budget: {budget}, description: {description}, name: {name}, phone: {phone}'
         # recipient_list = ['naymhsain00@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
-        recipient_list = ['naymhsain00@gmail.com']
+        recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
 
         context = {
                 "service": service,
@@ -53,9 +53,10 @@ def addrequestschedule(request):
                     "phone": phone
                 }
             }
+        
 
-        html_message = render_to_string('EstimateProjectRequestDetails.html', context=context)
-        ghelp().send_mail_formatting(html_message, subject, message, recipient_list)
+        html_message = render_to_string('RequestScheduleDetails.html', context=context)
+        ghelp().send_mail_formatting(html_message, subject, recipient_list)
 
         RequestscheduleSerializer(requestschedule, many=False)
         return Response({'status': rspn['success_status'], 'message': rspn['success_message_re']}, status=status.HTTP_201_CREATED)

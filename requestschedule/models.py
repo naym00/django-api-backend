@@ -17,3 +17,11 @@ class Requestschedule(models.Model):
 
     def __str__(self):
         return f'{self.service} - {self.date} - {self.date}'
+
+class Budgetdetails(models.Model):
+    budgetid = models.IntegerField()
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f'{self.budgetid} - {self.name}'
+    

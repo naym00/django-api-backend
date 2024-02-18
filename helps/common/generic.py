@@ -16,7 +16,7 @@ class Generichelps:
         return flag
 
 
-    def send_mail_formatting(self, html_message, subject, message, recipient_list, attachments=[], email_from = None):
+    def send_mail_formatting(self, html_message, subject, recipient_list, attachments=[], email_from = None):
         flag = False
         try:
             plain_message = strip_tags(html_message)
@@ -27,6 +27,24 @@ class Generichelps:
                 to=recipient_list
             )
             message.attach_alternative(html_message, 'text/html')
+            flag = bool(message.send())
+
+        except: flag = False
+        return flag
+    
+    def send_mail_formatting_including_attatchment(self, html_message, subject, recipient_list, attachments=[], email_from = None):
+        flag = False
+        try:
+            plain_message = strip_tags(html_message)
+            message = EmailMultiAlternatives(
+                subject=subject,
+                body=plain_message,
+                from_email=email_from,
+                to=recipient_list
+            )
+            message.attach_alternative(html_message, 'text/html')
+            for attachment in attachments:
+                message.attach_file(attachment)
             flag = bool(message.send())
 
         except: flag = False
@@ -101,3 +119,14 @@ class Generichelps:
                 pass
         else: flag = True
         return flag
+    
+    def getbudget(self, Budgetdetails, budget):
+        if budget:
+            if isinstance(budget, str):
+                if budget.isnumeric():
+                    budget =  int(budget)
+        if isinstance(budget, int):
+            budgetDetails = Budgetdetails.objects.filter(budgetid=budget)
+            if budgetDetails.exists():
+                budget = budgetDetails[0].name
+        return budget

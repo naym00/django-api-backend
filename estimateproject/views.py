@@ -6,6 +6,8 @@ from estimateproject.models import *
 from rest_framework import status
 import json
 
+from django.template.loader import render_to_string
+
 
 @api_view(['POST'])
 def addestimateproject(request):
@@ -22,7 +24,7 @@ def addestimateproject(request):
     attachmentname = '' if attachment == None else str(attachment)
     projectDetails = request.data.get('projectDetails', '')
     userDetails = json.loads(request.data.get('userDetails', str({})).replace("'", "\""))
-    newsletterSubscription = json.loads(request.data.get('newsletterSubscription', True))
+    newsletterSubscription = json.loads(request.data.get('newsletterSubscription', "true"))
 
     if not projectType: errors.append({'field': 'projectType','message': rspn['required_error']['projectType']})
     if not preferredContactTime: errors.append({'field': 'preferredContactTime','message': rspn['required_error']['preferredContactTime']})
@@ -70,9 +72,27 @@ def addestimateproject(request):
             Timeframe.objects.create(fieldName=key, value=timeframe[key], estimateProject=estimateproject)
 
         subject = 'Mail From Api Solutions ltd.'
-        message = f'challenges: {challenges}, alreadyHave: {alreadyHave}, timeframe: {timeframe}, projectType: {projectType}, yourRole: {yourRole}, servicesNeeded: {servicesNeeded}, preferredContactTime: {preferredContactTime}, projectDetails: {projectDetails}, userDetails: {userDetails}, newsletterSubscription: {newsletterSubscription}'
+        # message = f'challenges: {challenges}, alreadyHave: {alreadyHave}, timeframe: {timeframe}, projectType: {projectType}, yourRole: {yourRole}, servicesNeeded: {servicesNeeded}, preferredContactTime: {preferredContactTime}, projectDetails: {projectDetails}, userDetails: {userDetails}, newsletterSubscription: {newsletterSubscription}'
         recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        # recipient_list = ['sathy754@gmail.com']
         attachments = [f'media/{estimateproject.attachment}']
-        ghelp().send_mail_including_attatchment(subject, message, recipient_list, attachments)
+        context = {
+                "challenges": [key for key in challenges.keys() if challenges[key]],
+                "alreadyHave": [key for key in alreadyHave.keys() if alreadyHave[key]],
+                "timeframe": [key for key in timeframe.keys() if timeframe[key]],
+                "projectType": projectType,
+                "yourRole": yourRole,
+                "servicesNeeded": servicesNeeded,
+                "preferredContactTime": preferredContactTime,
+                "projectDetails": projectDetails,
+                "newsletterSubscription": newsletterSubscription,
+                "userDetails": {
+                    "name": name,
+                    "email": email,
+                    "phone": phone
+                }
+        }
+        html_message = render_to_string('EstimateProjectRequestDetails.html', context=context)
+        ghelp().send_mail_formatting_including_attatchment(html_message, subject, recipient_list, attachments)
             
         return Response({'status': rspn['success_status'], 'message': rspn['success_message_es']}, status=status.HTTP_201_CREATED)
