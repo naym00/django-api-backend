@@ -14,23 +14,6 @@ class Generichelps:
             flag = bool(email.send())
         except: flag = False
         return flag
-
-
-    def send_mail_formatting(self, html_message, subject, recipient_list, attachments=[], email_from = None):
-        flag = False
-        try:
-            plain_message = strip_tags(html_message)
-            message = EmailMultiAlternatives(
-                subject=subject,
-                body=plain_message,
-                from_email=email_from,
-                to=recipient_list
-            )
-            message.attach_alternative(html_message, 'text/html')
-            flag = bool(message.send())
-
-        except: flag = False
-        return flag
     
     def send_mail_formatting_including_attatchment(self, html_message, subject, recipient_list, attachments=[], email_from = None):
         flag = False
@@ -130,3 +113,44 @@ class Generichelps:
             if budgetDetails.exists():
                 budget = budgetDetails[0].name
         return budget
+    
+    def getcontextestimateproject(self, challenges, alreadyHave, timeframe, projectType, yourRole, servicesNeeded, preferredContactTime, projectDetails, newsletterSubscription, name, email, phone):
+        return {
+                "challenges": [key for key in challenges.keys() if challenges[key]],
+                "alreadyHave": [key for key in alreadyHave.keys() if alreadyHave[key]],
+                "timeframe": ",".join([key for key in timeframe.keys() if timeframe[key]]),
+                "projectType": projectType,
+                "yourRole": yourRole,
+                "servicesNeeded": servicesNeeded,
+                "preferredContactTime": preferredContactTime,
+                "projectDetails": projectDetails,
+                "newsletterSubscription": newsletterSubscription,
+                "userDetails": {
+                    "name": name,
+                    "email": email,
+                    "phone": phone
+                }
+        }
+    
+    def getcontextcontactus(self, companyName, name, corporateEmail, phone, comments, protectDataByNDA):
+        return {
+                "companyName": companyName,
+                "name": name,
+                "corporateEmail": corporateEmail,
+                "phone": phone,
+                "comments": comments,
+                "protectDataByNDA": protectDataByNDA
+        }
+    
+    def getcontextrequestschedule(self, service, date, time, budget, description, name, phone):
+        return {
+                "service": service,
+                "date": date,
+                "time": time,
+                "budget": budget,
+                "description": description,
+                "userDetails": {
+                    "name": name,
+                    "phone": phone
+                }
+            }

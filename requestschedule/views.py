@@ -40,23 +40,14 @@ def addrequestschedule(request):
         subject = 'Mail From Api Solutions ltd.'
         # message = f'service: {service}, date: {date}, time: {time}, budget: {budget}, description: {description}, name: {name}, phone: {phone}'
         # recipient_list = ['naymhsain00@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
-        recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        # recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        recipient_list = ['naymhsain00@gmail.com']
 
-        context = {
-                "service": service,
-                "date": date,
-                "time": time,
-                "budget": budget,
-                "description": description,
-                "userDetails": {
-                    "name": name,
-                    "phone": phone
-                }
-            }
+        context = ghelp().getcontextrequestschedule(service, date, time, budget, description, name, phone)
         
 
         html_message = render_to_string('RequestScheduleDetails.html', context=context)
-        ghelp().send_mail_formatting(html_message, subject, recipient_list)
+        ghelp().send_mail_formatting_including_attatchment(html_message, subject, recipient_list)
 
         RequestscheduleSerializer(requestschedule, many=False)
         return Response({'status': rspn['success_status'], 'message': rspn['success_message_re']}, status=status.HTTP_201_CREATED)

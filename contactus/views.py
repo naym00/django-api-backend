@@ -27,18 +27,12 @@ def addcontactus(request):
         subject = 'Mail From Api Solutions ltd.'
         # message = f'companyName: {companyName}, name: {name}, corporateEmail: {corporateEmail}, phone: {phone}, comments: {comments}, protectDataByNDA: {protectDataByNDA}'
         # recipient_list = ['sathy754@gmail.com']
-        recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        # recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        recipient_list = ['naymhsain00@gmail.com']
 
-        context = {
-                "companyName": companyName,
-                "name": name,
-                "corporateEmail": corporateEmail,
-                "phone": phone,
-                "comments": comments,
-                "protectDataByNDA": protectDataByNDA,
-        }
+        context = ghelp().getcontextcontactus(companyName, name, corporateEmail, phone, comments, protectDataByNDA)
         html_message = render_to_string('ContactUs.html', context=context)
-        ghelp().send_mail_formatting(html_message, subject, recipient_list)
+        ghelp().send_mail_formatting_including_attatchment(html_message, subject, recipient_list)
 
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
     else: return Response({'status': rspn['success_status'], 'message': rspn['success_message_co']}, status=status.HTTP_201_CREATED)

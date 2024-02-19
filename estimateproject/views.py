@@ -30,8 +30,6 @@ def addestimateproject(request):
     if not preferredContactTime: errors.append({'field': 'preferredContactTime','message': rspn['required_error']['preferredContactTime']})
     if not yourRole: errors.append({'field': 'yourRole','message': rspn['required_error']['yourRole']})
     if not userDetails: errors.append({'field': 'userDetails','message': rspn['required_error']['userDetails']})
-        
-        
 
     if (userDetails =={})==False:
         name=userDetails.get('name', '')
@@ -43,24 +41,32 @@ def addestimateproject(request):
         if attachmentname:
             if not ghelp().attachmentvalidate(attachmentname): errors.append({'field': 'attachment','message': rspn['field_err_msg']['attachment']})
 
-        
-    
-
     if errors: return Response({'status': rspn['error_status'], 'message': rspn['error_message'], 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
     else: 
         userdetails = Userdetails.objects.create(name=name, email=email, phone=phone)
 
-        estimateproject = Estimateproject.objects.create(
-            projectType=projectType, 
-            yourRole=yourRole, 
-            servicesNeeded=servicesNeeded,
-            preferredContactTime = preferredContactTime,
-            attachment = attachment,
-            attachmentname = attachmentname,
-            projectDetails = projectDetails,
-            userDetails = userdetails,
-            newsletterSubscription = newsletterSubscription
-            )
+        if attachment:
+            estimateproject = Estimateproject.objects.create(
+                projectType=projectType, 
+                yourRole=yourRole, 
+                servicesNeeded=servicesNeeded,
+                preferredContactTime = preferredContactTime,
+                attachment = attachment,
+                attachmentname = attachmentname,
+                projectDetails = projectDetails,
+                userDetails = userdetails,
+                newsletterSubscription = newsletterSubscription
+                )
+        else:
+            estimateproject = Estimateproject.objects.create(
+                projectType=projectType, 
+                yourRole=yourRole, 
+                servicesNeeded=servicesNeeded,
+                preferredContactTime = preferredContactTime,
+                projectDetails = projectDetails,
+                userDetails = userdetails,
+                newsletterSubscription = newsletterSubscription
+                )
 
         for key in challenges.keys():
             Challenge.objects.create(fieldName=key, value=challenges[key], estimateProject=estimateproject)
@@ -73,25 +79,10 @@ def addestimateproject(request):
 
         subject = 'Mail From Api Solutions ltd.'
         # message = f'challenges: {challenges}, alreadyHave: {alreadyHave}, timeframe: {timeframe}, projectType: {projectType}, yourRole: {yourRole}, servicesNeeded: {servicesNeeded}, preferredContactTime: {preferredContactTime}, projectDetails: {projectDetails}, userDetails: {userDetails}, newsletterSubscription: {newsletterSubscription}'
-        recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
-        # recipient_list = ['sathy754@gmail.com']
-        attachments = [f'media/{estimateproject.attachment}']
-        context = {
-                "challenges": [key for key in challenges.keys() if challenges[key]],
-                "alreadyHave": [key for key in alreadyHave.keys() if alreadyHave[key]],
-                "timeframe": [key for key in timeframe.keys() if timeframe[key]],
-                "projectType": projectType,
-                "yourRole": yourRole,
-                "servicesNeeded": servicesNeeded,
-                "preferredContactTime": preferredContactTime,
-                "projectDetails": projectDetails,
-                "newsletterSubscription": newsletterSubscription,
-                "userDetails": {
-                    "name": name,
-                    "email": email,
-                    "phone": phone
-                }
-        }
+        # recipient_list = ['nazmulhussain.api@gmail.com','mustafatanim59@gmail.com','sathy754@gmail.com']
+        recipient_list = ['naymhsain00@gmail.com']
+        attachments = [f'media/{estimateproject.attachment}'] if attachment else []
+        context = ghelp().getcontextestimateproject(challenges, alreadyHave, timeframe, projectType, yourRole, servicesNeeded, preferredContactTime, projectDetails, newsletterSubscription, name, email, phone)
         html_message = render_to_string('EstimateProjectRequestDetails.html', context=context)
         ghelp().send_mail_formatting_including_attatchment(html_message, subject, recipient_list, attachments)
             
